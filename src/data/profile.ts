@@ -1,0 +1,67 @@
+export const profile = {
+  name: "yuyudao",
+  displayName: "Yuyudao",
+  role: "システムエンジニア · AI / フルスタック開発 · 国際化",
+  location: "Japan",
+  profileImageUrl: "",
+  introduction:
+    "テクノロジーを、もっと多くの人に届くかたちへ。AI、フルスタック開発、国際化を横断し、仕組みと体験の両面からプロダクトをつくっています。",
+  about: [
+    "日本を拠点に、AIの活用とパイプライン開発、Next.jsやPythonによるフルスタック開発に取り組むシステムエンジニアです。Proxmoxを使ったインフラ構築や、Google AI認定資格を通じた学びも続けています。",
+    "OSSの国際化・日本語ローカライズや国際的なコミュニティ活動にも参加。技術を必要とする人へ届け、現実の価値につなげることを大切にしています。",
+  ],
+  focus: ["AI", "Full Stack", "i18n / Localization", "Systems Engineering"],
+  githubUrl: "",
+  contactUrl: "",
+  technologies: [
+    { name: "Languages", items: ["Python", "Java", "JavaScript", "TypeScript", "Bash", "HTML", "CSS"] },
+    { name: "Frontend", items: ["Next.js", "React", "Tailwind CSS", "Vercel"] },
+    { name: "Backend", items: ["Node.js", "PostgreSQL", "MySQL"] },
+    { name: "Cloud & Systems", items: ["Ubuntu", "Linux", "Cloudflare", "Proxmox VE", "Windows Server", "Ubuntu Server"] },
+    { name: "DevOps & Tools", items: ["Docker", "Git", "GitHub", "Visual Studio Code"] },
+  ],
+  experience: [
+    {
+      organization: "micro:bit Educational Foundation",
+      role: "日本語翻訳・校正",
+      description: "60以上の国と地域で使われるmicro:bit Educational Foundationの教材・サービスの日本語翻訳と校正に参加。",
+      kind: "LOCALIZATION",
+      tags: ["micro:bit", "教育", "日本語翻訳", "校正"],
+    },
+    {
+      organization: "Microsoft MakeCode",
+      role: "日本語翻訳・校正",
+      description: "Microsoft MakeCodeの日本語翻訳・校正に参加。BBC micro:bit、Adafruit Circuit Playground、Minecraft Educationのコンテンツに携わる。",
+      kind: "LOCALIZATION",
+      tags: ["Microsoft MakeCode", "BBC micro:bit", "Adafruit Circuit Playground", "Minecraft Education"],
+    },
+    {
+      organization: "みんなの銀行",
+      role: "第3期 公式アンバサダー",
+      description: "日本初のデジタルバンク・みんなの銀行のコミュニティで、第3期公式アンバサダーとして活動。",
+      kind: "COMMUNITY",
+      tags: ["みんなの銀行", "第3期", "公式アンバサダー", "コミュニティ"],
+    },
+    {
+      organization: "Hypixel",
+      role: "日本語翻訳",
+      description: "世界中のプレイヤーが集うHypixel Networkのゲーム体験を届ける日本語翻訳に参加。",
+      kind: "LOCALIZATION",
+      tags: ["Hypixel Network", "ゲーム", "日本語翻訳", "国際コミュニティ"],
+    },
+  ],
+  achievements: [
+    { title: "みんなの銀行 第3期 公式アンバサダー", detail: "日本初のデジタルバンクを応援するコミュニティで活動。", mark: "01" },
+    { title: "Google AI 認定資格 4種", detail: "AI活用と生成AIに関するGoogleの認定資格を取得。", mark: "02" },
+    { title: "Microsoft MakeCode 日本語ローカライズ", detail: "教育向けプログラミング環境の日本語翻訳・校正。", mark: "03" },
+    { title: "micro:bit 日本語ローカライズ", detail: "世界中の学習者に向けた翻訳・校正に参加。", mark: "04" },
+    { title: "Hypixel 日本語ローカライズ", detail: "ゲーム体験を届ける日本語翻訳に参加。", mark: "05" },
+    { title: "受賞歴のある日本映画に出演", detail: "受賞歴のある日本の長編映画に出演。", mark: "06" },
+  ],
+  certifications: [
+    { name: "Google AI Professional Certificate", domain: "AI / MACHINE LEARNING", url: "" },
+    { name: "Generative AI Leader Professional Certificate", domain: "GENERATIVE AI / LEADERSHIP", url: "" },
+    { name: "Google AI Essentials", domain: "AI FOUNDATIONS", url: "" },
+    { name: "Google Prompting Essentials", domain: "PROMPT ENGINEERING", url: "" },
+  ],
+} as const;
