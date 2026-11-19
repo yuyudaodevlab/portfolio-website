@@ -51,16 +51,14 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # prebuild のスクリプト（.mts）を Node がそのまま実行できるバージョン
+          node-version: "24"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v5
-        with:
-          # Automatically inject basePath in your Next.js configuration file and disable
-          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-          #
-          # You may remove this line if you want to manage the configuration yourself.
-          static_site_generator: next
+        # static_site_generator は使わない。next.config.ts が PAGES_BASE_PATH を見て静的書き出しに切り替える
+        # （このアクションが生成する CommonJS の next.config.js は、このリポジトリでは読み込めないため）
       - name: Restore cache
         uses: actions/cache@v4
         with:
@@ -74,7 +72,11 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        # npm run build なので prebuild（GitHub データとフォントサブセットの更新）も走る
+        run: npm run build
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

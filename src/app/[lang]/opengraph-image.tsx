@@ -1,9 +1,14 @@
 import { ImageResponse } from "next/og";
-import { getDictionary, isLang } from "@/content";
+import { getDictionary, isLang, LANGS } from "@/content";
 
 export const alt = "Yuyudaodevlab";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-static";
+
+export function generateStaticParams() {
+  return LANGS.map((lang) => ({ lang }));
+}
 
 /** ブランチレーンと名前だけのシンプルな OGP 画像 */
 export default async function OgImage({ params }: { params: Promise<{ lang: string }> }) {

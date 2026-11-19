@@ -5,7 +5,7 @@ import styles from "./site.module.css";
 export function SiteHeader({ lang, t }: { lang: Lang; t: Dictionary }) {
   return (
     <header className={styles.header}>
-      <a className={`${styles.home} mono`} href={`/${lang}#top`}>
+      <a className={`${styles.home} mono`} href="#top">
         yuyudaodevlab
       </a>
       <LangSwitch lang={lang} label={t.ui.langLabel} />

@@ -62,4 +62,13 @@ scripts/
 
 ## デプロイ
 
-Vercel を想定（ISR と OG 画像の生成にサーバーが要る）。`.github/workflows/nextjs.yml` は GitHub Pages への静的書き出し用で、このサイトの構成とは合わない。
+どちらにも出せる。
+
+- **Vercel**: そのままデプロイ。GitHub のデータは ISR で 1 時間ごとに更新、`/` は `/ja` へリダイレクト。
+- **GitHub Pages**: `.github/workflows/nextjs.yml` が `main` への push で動く。ワークフローが `PAGES_BASE_PATH` を渡すと `next.config.ts` が静的書き出し（`out/`、`basePath` 付き）に切り替わる。GitHub のデータはビルドした時点の値。`/` は `public/index.html` から `ja/` へ移動する。
+
+手元で Pages と同じものを作るには:
+
+```bash
+PAGES_BASE_PATH=/portfolio-website NEXT_PUBLIC_SITE_URL=https://yuyudaodevlab.github.io/portfolio-website npm run build
+```

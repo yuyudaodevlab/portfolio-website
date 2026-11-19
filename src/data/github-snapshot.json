@@ -1,8 +1,16 @@
 {
   "user": "yuyudaodevlab",
-  "fetchedAt": "2026-11-19T03:03:42.905Z",
+  "fetchedAt": "2026-11-19T03:08:45.175Z",
   "source": "snapshot",
   "repos": [
+    {
+      "name": "portfolio-website",
+      "url": "https://github.com/yuyudaodevlab/portfolio-website",
+      "description": "yuyudaodevlabのポートフォリオサイト",
+      "language": "TypeScript",
+      "pushedAt": "2026-11-19T03:05:14Z",
+      "fork": false
+    },
     {
       "name": "StaffSchedule-maker",
       "url": "https://github.com/yuyudaodevlab/StaffSchedule-maker",
@@ -42,18 +50,10 @@
       "language": "Java",
       "pushedAt": "2026-11-10T01:38:04Z",
       "fork": false
-    },
-    {
-      "name": "portfolio-website",
-      "url": "https://github.com/yuyudaodevlab/portfolio-website",
-      "description": "yuyudaodevlabのポートフォリオサイト",
-      "language": "TypeScript",
-      "pushedAt": "2026-11-05T02:51:40Z",
-      "fork": false
     }
   ],
   "contributions": {
-    "total": 297,
+    "total": 298,
     "weeks": [
       [
         {
@@ -2002,8 +2002,8 @@
         },
         {
           "date": "2026-11-19",
-          "level": 0,
-          "count": 0
+          "level": 1,
+          "count": 1
         }
       ]
     ]
@@ -2011,33 +2011,63 @@
   "languages": [
     {
       "name": "TypeScript",
-      "bytes": 470674,
-      "ratio": 0.6714887558296633
-    },
-    {
-      "name": "Rust",
-      "bytes": 56329,
-      "ratio": 0.08036197055101642
-    },
-    {
-      "name": "CSS",
-      "bytes": 53909,
-      "ratio": 0.07690946884259874
+      "bytes": 692088,
+      "ratio": 0.39912756732691196
     },
     {
       "name": "Swift",
-      "bytes": 52083,
-      "ratio": 0.07430439937170176
+      "bytes": 507623,
+      "ratio": 0.29274649048847695
+    },
+    {
+      "name": "Rust",
+      "bytes": 234552,
+      "ratio": 0.13526627996968862
+    },
+    {
+      "name": "CSS",
+      "bytes": 88184,
+      "ratio": 0.05085576602564472
     },
     {
       "name": "Python",
-      "bytes": 51717,
-      "ratio": 0.07378224415464354
+      "bytes": 69112,
+      "ratio": 0.03985693211426515
     },
     {
       "name": "JavaScript",
-      "bytes": 16229,
-      "ratio": 0.02315316125037628
+      "bytes": 59318,
+      "ratio": 0.03420872640285305
+    },
+    {
+      "name": "Inno Setup",
+      "bytes": 40969,
+      "ratio": 0.0236268470278581
+    },
+    {
+      "name": "Java",
+      "bytes": 28797,
+      "ratio": 0.016607247281145005
+    },
+    {
+      "name": "Shell",
+      "bytes": 5544,
+      "ratio": 0.0031972281462189778
+    },
+    {
+      "name": "PowerShell",
+      "bytes": 5542,
+      "ratio": 0.003196074745011828
+    },
+    {
+      "name": "HTML",
+      "bytes": 1862,
+      "ratio": 0.0010738165238563739
+    },
+    {
+      "name": "C",
+      "bytes": 411,
+      "ratio": 0.00023702394806926404
     }
   ]
 }
