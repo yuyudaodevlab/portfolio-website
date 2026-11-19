@@ -1,0 +1,176 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 40;
+  contain: strict;
+}
+
+/* ---- カーソル ---- */
+
+.cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease-in-out;
+  will-change: transform;
+}
+
+.arrow {
+  display: block;
+  filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.5));
+}
+
+.tag {
+  position: absolute;
+  left: 13px;
+  top: 19px;
+  padding: 1px 5px 2px;
+  border-radius: 2px;
+  background: var(--agent);
+  color: #0b0d10;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* ---- フレーム ---- */
+
+.frame {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.frame:not([data-phase="off"]) {
+  opacity: 1;
+}
+
+.tint {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  background: rgb(77 142 255 / 0.07);
+}
+
+.edge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+
+.eH {
+  width: 100%;
+  height: 1px;
+}
+
+.eV {
+  width: 1px;
+  height: 100%;
+}
+
+.edge > i {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.eH > i {
+  background: repeating-linear-gradient(90deg, var(--lane-blue) 0 5px, transparent 5px 9px);
+}
+
+.eV > i {
+  background: repeating-linear-gradient(180deg, var(--lane-blue) 0 5px, transparent 5px 9px);
+}
+
+.dims {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--lane-blue);
+  color: #0b0d10;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.outline {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--lane-blue);
+  opacity: 0;
+}
+
+.outline > b {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: var(--bg);
+  border: 1px solid var(--lane-blue);
+}
+
+.outline > b:nth-child(1) {
+  left: -4px;
+  top: -4px;
+}
+.outline > b:nth-child(2) {
+  right: -4px;
+  top: -4px;
+}
+.outline > b:nth-child(3) {
+  left: -4px;
+  bottom: -4px;
+}
+.outline > b:nth-child(4) {
+  right: -4px;
+  bottom: -4px;
+}
+
+.tip {
+  position: absolute;
+  left: -1px;
+  bottom: calc(100% + 9px);
+  max-width: min(68ch, calc(100vw - 40px));
+  overflow: hidden;
+  padding: 4px 9px 5px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--agent, var(--lane-blue));
+  border-radius: 2px;
+  background: #060709;
+  color: var(--ink);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+}
+
+.frame[data-tip="below"] .tip {
+  bottom: auto;
+  top: calc(100% + 9px);
+}
+
+/* mark: マーキーだけ / rough・type: アウトラインとツールチップだけ */
+.frame:not([data-phase="mark"]) .tint,
+.frame:not([data-phase="mark"]) .edge,
+.frame:not([data-phase="mark"]) .dims {
+  opacity: 0;
+}
+
+.frame[data-phase="rough"] .outline,
+.frame[data-phase="type"] .outline,
+.frame[data-phase="rough"] .tip,
+.frame[data-phase="type"] .tip {
+  opacity: 1;
+}

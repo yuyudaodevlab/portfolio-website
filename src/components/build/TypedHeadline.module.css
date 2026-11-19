@@ -1,0 +1,48 @@
+.typed {
+  position: relative;
+  display: block;
+  font-variation-settings: "wdth" var(--wdth, var(--wdth-final, 100));
+}
+
+.over {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  white-space: inherit;
+}
+
+.over [data-rest] {
+  color: transparent;
+}
+
+.over [data-caret] {
+  position: relative;
+}
+
+.over [data-caret]::after {
+  content: "";
+  position: absolute;
+  left: 0.03em;
+  top: 0.12em;
+  width: max(2px, 0.055em);
+  height: 0.92em;
+  background: var(--caret, var(--lane-blue));
+  animation: blink 0.9s steps(1) infinite;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  :global(html:not([data-build="off"])) :global([data-block]:not([data-state="done"])) .full {
+    color: transparent;
+  }
+
+  /* ゴースト: 字形だけをスケルトン色で先に描く。オーバーレイの残りは透明なので、その下から透けて見える */
+  :global(html:not([data-build="off"])) :global([data-block][data-ghost]:not([data-state="done"])) .full {
+    color: #1a1e25;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

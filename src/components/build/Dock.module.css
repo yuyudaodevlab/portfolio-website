@@ -1,0 +1,120 @@
+.dock {
+  position: fixed;
+  right: 16px;
+  bottom: 14px;
+  z-index: 60;
+  width: min(520px, calc(100vw - 32px));
+  pointer-events: none;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-dim);
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 14px;
+  width: fit-content;
+  margin: 0 0 4px auto;
+  padding: 2px 10px;
+  border-radius: 2px;
+  background: rgb(11 13 16 / 0.92);
+  pointer-events: auto;
+}
+
+.status {
+  margin-right: 6px;
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+.button {
+  pointer-events: auto;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.button:hover {
+  text-decoration-color: var(--lane-blue);
+}
+
+.button:disabled {
+  color: var(--ink-dim);
+  cursor: default;
+  text-decoration: none;
+}
+
+.log {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: rgb(11 13 16 / 0.94);
+  min-height: calc(6 * 1.6em + 16px);
+}
+
+.line {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.time {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.agent {
+  flex: none;
+}
+
+.text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+  .dock {
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+    width: auto;
+    font-size: 10.5px;
+  }
+
+  .log {
+    min-height: calc(3 * 1.6em + 12px);
+    padding: 6px 8px;
+  }
+
+  .line:nth-last-child(n + 4) {
+    display: none;
+  }
+
+  .time {
+    display: none;
+  }
+}
+
+/* 完成したら、ログは少し待ってから退く（ボタンは残す） */
+.dock[data-status="complete"] .log {
+  animation: settle 0.5s ease-in-out 3.4s forwards;
+}
+
+@keyframes settle {
+  to {
+    opacity: 0;
+  }
+}

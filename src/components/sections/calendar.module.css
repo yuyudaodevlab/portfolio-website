@@ -1,0 +1,87 @@
+.wrap {
+  margin: 0;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: auto;
+  overflow: visible;
+}
+
+.month {
+  fill: var(--ink-dim);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 9.5px;
+}
+
+.cell,
+.swatch {
+  fill: #161a20;
+}
+
+.cell[data-level="1"],
+.swatch[data-level="1"] {
+  fill: color-mix(in srgb, var(--lane-green) 28%, #161a20);
+}
+.cell[data-level="2"],
+.swatch[data-level="2"] {
+  fill: color-mix(in srgb, var(--lane-green) 50%, #161a20);
+}
+.cell[data-level="3"],
+.swatch[data-level="3"] {
+  fill: color-mix(in srgb, var(--lane-green) 75%, #161a20);
+}
+.cell[data-level="4"],
+.swatch[data-level="4"] {
+  fill: var(--lane-green);
+}
+
+.cell {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  color: var(--ink-dim);
+  font-size: 11px;
+}
+
+.legend > span:first-child {
+  margin-right: 4px;
+}
+.legend > span:last-child {
+  margin-left: 4px;
+}
+
+/* 1 年分のコミットを左から右へ打っていく */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  :global(html:not([data-build="off"])) :global([data-block]:not([data-state="done"])) .cell {
+    opacity: 0;
+  }
+
+  :global(html:not([data-build="off"])) :global([data-block][data-state="done"]) .cell {
+    animation: punch 0.42s var(--ease) both;
+    animation-delay: calc(var(--w) * 24ms + var(--d) * 9ms + 120ms);
+  }
+}
+
+@keyframes punch {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

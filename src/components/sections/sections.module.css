@@ -1,0 +1,551 @@
+/* ---- 共通 ---- */
+
+.section {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(16px, 2.2vw, 36px);
+  row-gap: 28px;
+  align-items: start;
+  padding-block: clamp(96px, 15vh, 168px) clamp(48px, 7vh, 80px);
+  /* 画面外のセクションは描画を省く（サイズは一度描いたものを覚える） */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+.section > * {
+  grid-column: 1 / -1;
+}
+
+.headBlock {
+  margin-bottom: 20px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.hash {
+  color: var(--ink-dim);
+}
+
+.label {
+  color: var(--lane);
+}
+
+.title {
+  --wdth-final: 112;
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5.4vw, 72px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.prose {
+  display: grid;
+  gap: 1.1em;
+  max-width: 36em;
+}
+
+.section > .prose {
+  grid-column: 1 / span 7;
+}
+
+.para {
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.dim {
+  color: var(--ink-dim);
+}
+
+.subhead {
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+/* ---- Hero ---- */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(16px, 2.2vw, 36px);
+  align-content: end;
+  min-height: 100svh;
+  padding-block: 120px clamp(56px, 11vh, 128px);
+}
+
+.hero > * {
+  grid-column: 1 / -1;
+}
+
+.heroMetaBlock {
+  margin-bottom: 18px;
+}
+
+.heroMeta {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.headRef {
+  color: var(--lane-blue);
+}
+
+.branch {
+  color: var(--lane-green);
+}
+
+.heroName {
+  --wdth-final: 125;
+  margin-left: -0.045em;
+  font-family: var(--font-display);
+  font-size: clamp(64px, 14vw, 220px);
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  white-space: pre-line;
+}
+
+.hero > .heroRoleBlock {
+  grid-column: 1 / span 5;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+.hero > .heroLeadBlock {
+  grid-column: 7 / span 5;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+.heroRole {
+  display: grid;
+  gap: 6px;
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.heroLoc {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink-dim);
+}
+
+.heroLoc :global(.mono) {
+  margin-right: 8px;
+  font-size: 12px;
+}
+
+.heroLead {
+  display: grid;
+  gap: 14px;
+  max-width: 30em;
+  font-size: 16.5px;
+}
+
+.heroLead :global(.mono) {
+  font-size: 13.5px;
+}
+
+/* ---- About ---- */
+
+.section > .aside {
+  grid-column: 9 / span 4;
+}
+
+.facts {
+  border-top: 1px solid var(--line);
+}
+
+.fact {
+  display: grid;
+  gap: 2px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fact dt {
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.fact dd {
+  font-size: 15.5px;
+}
+
+/* ---- Stack ---- */
+
+.section > .stackGrid {
+  grid-column: 1 / span 11;
+}
+
+.stackGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(24px, 4vw, 64px);
+}
+
+.stackGroup {
+  padding: 20px 0 22px;
+  border-top: 1px solid var(--line);
+}
+
+.stackKey {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 14px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.stackKey :global(.mono) {
+  color: var(--lane);
+}
+
+.stackItems {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.stackItems li:not(:last-child)::after {
+  content: ",";
+  margin-right: 0.45em;
+  color: var(--ink-dim);
+}
+
+/* ---- Experience（git log --graph） ---- */
+
+.section > .expList {
+  grid-column: 1 / span 10;
+}
+
+.expRow {
+  display: grid;
+  grid-template-columns: 24px 72px minmax(0, 1fr);
+  column-gap: 16px;
+  padding-bottom: 48px;
+}
+
+.expGraph {
+  position: relative;
+  align-self: stretch;
+}
+
+.expLine {
+  position: absolute;
+  left: 11px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+
+li:first-child .expLine {
+  top: 16px;
+}
+
+.expLine[data-last] {
+  bottom: auto;
+  height: 16px;
+}
+
+.expDot {
+  position: absolute;
+  left: 6px;
+  top: 11px;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--lane);
+  border-radius: 50%;
+  background: var(--bg);
+  transition:
+    transform 0.4s var(--ease),
+    background-color 0.4s var(--ease);
+}
+
+.expRow:hover .expDot {
+  transform: scale(1.7);
+  background: var(--lane);
+}
+
+.expHash {
+  padding-top: 7px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.expOrg {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.expRole {
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--ink-dim);
+}
+
+.expText {
+  max-width: 36em;
+  margin-top: 12px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+/* ---- Recognition / Certifications（git tag -l） ---- */
+
+.section > .tagList {
+  grid-column: 1 / span 10;
+}
+
+.tagList {
+  border-top: 1px solid var(--line);
+}
+
+.tagRow {
+  display: grid;
+  grid-template-columns: minmax(0, 17em) minmax(0, 1fr);
+  gap: 4px 32px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tagName {
+  padding-top: 4px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--lane);
+  overflow-wrap: anywhere;
+}
+
+.tagName::before {
+  content: "tag: ";
+  color: var(--ink-dim);
+}
+
+.tagText {
+  font-size: 17px;
+}
+
+.tagNote {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12.5px;
+  color: var(--ink-dim);
+}
+
+/* ---- Activity（git shortlog） ---- */
+
+.section > .activitySummary {
+  grid-column: 1 / span 4;
+}
+.section > .calendarBlock {
+  grid-column: 5 / span 8;
+}
+.section > .langBlock {
+  grid-column: 1 / span 4;
+  margin-top: 24px;
+}
+.section > .repoBlock {
+  grid-column: 5 / span 8;
+  margin-top: 24px;
+}
+
+.bigNumber {
+  display: grid;
+}
+
+.bigValue {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 7vw, 104px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 118;
+  font-variant-numeric: tabular-nums;
+}
+
+.bigLabel {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--ink-dim);
+}
+
+.fetched {
+  margin-top: 16px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.langs {
+  margin: 0;
+}
+
+.langBar {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  margin-bottom: 14px;
+}
+
+.langBar span {
+  min-width: 2px;
+  background: var(--lane-green);
+}
+
+.langList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12.5px;
+}
+
+.repos {
+  border-top: 1px solid var(--line);
+}
+
+.repo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 2px 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.repoName {
+  justify-self: start;
+  font-size: 16.5px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.repoLang,
+.repoDate {
+  font-size: 12px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.repoDesc {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  font-size: 14px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ---- Contact（git remote -v） ---- */
+
+.section > .remoteBlock {
+  grid-column: 1 / span 10;
+}
+
+.remotes {
+  font-size: 14px;
+}
+
+.remote {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  padding: 4px 0;
+}
+
+.remoteName {
+  min-width: 6ch;
+  color: var(--lane);
+}
+
+/* ---- 狭い画面 ---- */
+
+@media (max-width: 960px) {
+  .section > .prose,
+  .section > .aside,
+  .section > .stackGrid,
+  .section > .expList,
+  .section > .tagList,
+  .section > .activitySummary,
+  .section > .calendarBlock,
+  .section > .langBlock,
+  .section > .repoBlock,
+  .section > .remoteBlock,
+  .hero > .heroRoleBlock,
+  .hero > .heroLeadBlock {
+    grid-column: 1 / -1;
+  }
+
+  .hero > .heroLeadBlock {
+    margin-top: 20px;
+  }
+
+  .section > .langBlock,
+  .section > .repoBlock {
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .stackGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .expRow {
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  .expHash {
+    display: none;
+  }
+
+  .tagRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroName {
+    --wdth-final: 112;
+  }
+
+  .repo {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .repoLang {
+    display: none;
+  }
+}

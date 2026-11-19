@@ -1,0 +1,114 @@
+/*
+ * 4 状態:
+ *   empty  … 何も見えない
+ *   mark   … カーソルが青い破線のマーキーを引く（マーキーは CursorLayer 側）
+ *   rough  … スケルトン（::before のグラデーション）＋アウトラインとツールチップ（CursorLayer 側）
+ *   done   … 中身が短いスケールとブラーで現れ、枠に青い光が走る（::after）
+ * 隠すのは scripting: enabled かつ reduced-motion でないときだけ。JS なし・reduced-motion なら最初から完成。
+ */
+
+.block {
+  position: relative;
+  /* タイピングや幅の変化を、ブロックの中だけの再レイアウトに閉じ込める */
+  contain: layout;
+  --skel: #1a1e25;
+}
+
+.fill {
+  position: relative;
+}
+
+.block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 2px;
+  background:
+    linear-gradient(var(--skel) 0 0) 0 2px / 34% 12px no-repeat,
+    linear-gradient(var(--skel) 0 0) 0 26px / 94% 9px no-repeat,
+    linear-gradient(var(--skel) 0 0) 0 44px / 86% 9px no-repeat,
+    linear-gradient(var(--skel) 0 0) 0 62px / 58% 9px no-repeat;
+}
+
+.block[data-ghost]::before {
+  display: none;
+}
+
+.block[data-kind="headline"]::before {
+  background: linear-gradient(var(--skel) 0 0) 0 50% / 58% 62% no-repeat;
+}
+
+.block::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  pointer-events: none;
+  opacity: 0;
+  border: 1px solid var(--lane-blue);
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px rgb(77 142 255 / 0.18),
+    0 0 26px rgb(77 142 255 / 0.32),
+    inset 0 0 16px rgb(77 142 255 / 0.1);
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  :global(html:not([data-build="off"])) .block:not([data-state="done"]) > .fill {
+    opacity: 0;
+  }
+
+  /* 見出しはタイピング中から見せる（本文は透明、オーバーレイに打つ） */
+  :global(html:not([data-build="off"])) .block[data-kind="headline"][data-state="type"] > .fill,
+  :global(html:not([data-build="off"])) .block[data-ghost] > .fill {
+    opacity: 1;
+  }
+
+  .block[data-state="rough"]::before {
+    opacity: 1;
+  }
+
+  .block[data-state="done"]:not([data-kind="headline"]) > .fill {
+    animation: reveal 0.5s var(--ease) both;
+  }
+
+  .block[data-state="done"]::after {
+    animation: glow 0.9s ease-out both;
+  }
+
+  :global(html[data-build="off"]) .block > .fill,
+  :global(html[data-build="off"]) .block::after {
+    animation: none;
+  }
+
+  /* キーボードでフォーカスしたものは、組み立て前でも必ず見せる */
+  .block:focus-within > .fill {
+    opacity: 1 !important;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0;
+  }
+  16% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
