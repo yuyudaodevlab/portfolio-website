@@ -137,7 +137,7 @@ export const ja: Dictionary = {
     more: "多",
   },
   contact: {
-    intro: "いまのところ、連絡先は GitHub だけです。",
+    intro: "連絡は GitHub か Instagram からどうぞ。",
   },
   footer: "Next.js と Three.js で作っています。",
 };

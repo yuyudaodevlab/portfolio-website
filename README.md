@@ -56,7 +56,7 @@ scripts/
 | 読売新聞の掲載日 `{{掲載日}}` | 同 `recognition.items`（`media/yomiuri`）の `note` |
 | 出演した映画の作品名 `{{作品名}}` | 同 `recognition.items`（`film/feature`）の `note` か `text` |
 | 資格の個別認証 URL `{{URL}}` | `certifications.items[].url`（今は `https://grow.google/certificates/`） |
-| GitHub 以外の連絡先 | `src/content/shared.ts` の `REMOTES` |
+| その他の連絡先（X・LinkedIn・メールなど） | `src/content/shared.ts` の `REMOTES` |
 
 文言を変えたら `npm run fonts:subset` を実行する（ビルド時は自動）。サブセットに無い文字はシステムの日本語フォントで表示される。
 

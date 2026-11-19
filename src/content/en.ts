@@ -145,7 +145,7 @@ export const en: Dictionary = {
     more: "More",
   },
   contact: {
-    intro: "For now, GitHub is the only way to reach me.",
+    intro: "You can reach me on GitHub or Instagram.",
   },
   footer: "Built with Next.js and Three.js.",
 };

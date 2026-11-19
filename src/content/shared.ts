@@ -41,9 +41,10 @@ export const STACK: { key: string; items: string[] }[] = [
 export const CERT_URL = "https://grow.google/certificates/";
 
 /**
- * その他の連絡先。{{X / LinkedIn / メールなど}} 未定のため GitHub のみ。
+ * 連絡先（git remote -v として表示）。{{X / LinkedIn / メールなど}} は未定。
  * 追加するときは { name: "x", url: "https://..." } の形で足す。
  */
 export const REMOTES: { name: string; url: string; label: string }[] = [
   { name: "github", url: PROFILE.github, label: PROFILE.githubLabel },
+  { name: "instagram", url: "https://www.instagram.com/yuyudao2877/", label: "instagram.com/yuyudao2877" },
 ];
