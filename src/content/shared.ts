@@ -41,10 +41,18 @@ export const STACK: { key: string; items: string[] }[] = [
 export const CERT_URL = "https://grow.google/certificates/";
 
 /**
- * 連絡先（git remote -v として表示）。{{X / LinkedIn / メールなど}} は未定。
- * 追加するときは { name: "x", url: "https://..." } の形で足す。
+ * コンタクトに並べるリンク。{{X / LinkedIn / メールなど}} は未定。
+ * 追加するときは icon に対応するアイコンを components/sections/ContactIcon.tsx にも足す。
  */
-export const REMOTES: { name: string; url: string; label: string }[] = [
-  { name: "github", url: PROFILE.github, label: PROFILE.githubLabel },
-  { name: "instagram", url: "https://www.instagram.com/yuyudao2877/", label: "instagram.com/yuyudao2877" },
+export type Remote = { name: string; service: string; handle: string; url: string; icon: "github" | "instagram" };
+
+export const REMOTES: Remote[] = [
+  { name: "github", service: "GitHub", handle: "@yuyudaodevlab", url: PROFILE.github, icon: "github" },
+  {
+    name: "instagram",
+    service: "Instagram",
+    handle: "@yuyudao2877",
+    url: "https://www.instagram.com/yuyudao2877/",
+    icon: "instagram",
+  },
 ];

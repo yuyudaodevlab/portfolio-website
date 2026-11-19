@@ -29,7 +29,7 @@ export const ja: Dictionary = {
     recognition: { title: "受賞・メディア" },
     certifications: { title: "資格" },
     activity: { title: "活動" },
-    contact: { title: "連絡先" },
+    contact: { title: "コンタクト" },
   },
   about: {
     paragraphs: [

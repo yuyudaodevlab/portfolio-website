@@ -37,7 +37,7 @@ export function BranchLanes({ sections }: { sections: SectionMeta[] }) {
         const r = el.getBoundingClientRect();
         return [{ ...s, top: r.top - pr.top, bottom: r.bottom - pr.top }];
       });
-      setGeo({ height: page.scrollHeight, rail, items });
+      setGeo({ height: page.offsetHeight, rail, items }); // scrollHeight だと自分（SVG）のはみ出しを含んで縮まなくなる
     };
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(measure);

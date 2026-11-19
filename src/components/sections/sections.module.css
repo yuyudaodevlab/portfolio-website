@@ -469,26 +469,131 @@ li:first-child .expLine {
   text-overflow: ellipsis;
 }
 
-/* ---- Contact（git remote -v） ---- */
+/* ---- Contact ---- */
 
-.section > .remoteBlock {
+.section > .remotes {
   grid-column: 1 / span 10;
+  margin-top: 16px;
 }
 
 .remotes {
-  font-size: 14px;
+  border-top: 1px solid var(--line);
 }
 
-.remote {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 18px;
-  padding: 4px 0;
+.remoteLink {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: clamp(16px, 2.4vw, 32px);
+  padding: clamp(22px, 3vw, 34px) 12px clamp(22px, 3vw, 34px) 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  overflow: hidden;
 }
 
-.remoteName {
-  min-width: 6ch;
+/* ホバーで行の面が左から伸び、下線がレーン色で走る */
+.remoteLink::before,
+.remoteLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.6s var(--ease);
+}
+
+.remoteLink::before {
+  inset-block: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, var(--bg-raise), rgb(18 21 26 / 0));
+}
+
+.remoteLink::after {
+  bottom: -1px;
+  height: 1px;
+  background: var(--lane);
+}
+
+.remoteIcon {
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 5vw, 64px);
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink);
+  transition:
+    background-color 0.45s var(--ease),
+    border-color 0.45s var(--ease),
+    color 0.45s var(--ease);
+}
+
+.remoteText {
+  display: grid;
+  gap: 8px;
+  transition: transform 0.6s var(--ease);
+}
+
+.remoteService {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.6vw, 64px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 112;
+}
+
+.remoteHandle {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-dim);
+  transition: color 0.45s var(--ease);
+}
+
+.remoteIndex {
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.remoteArrow {
+  color: var(--ink-dim);
+  transition:
+    transform 0.6s var(--ease),
+    color 0.45s var(--ease);
+}
+
+.remoteLink:hover::before,
+.remoteLink:focus-visible::before,
+.remoteLink:hover::after,
+.remoteLink:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.remoteLink:hover .remoteIcon,
+.remoteLink:focus-visible .remoteIcon {
+  border-color: var(--lane);
+  background: var(--lane);
+  color: var(--bg);
+}
+
+.remoteLink:hover .remoteText,
+.remoteLink:focus-visible .remoteText {
+  transform: translateX(10px);
+}
+
+.remoteLink:hover .remoteHandle,
+.remoteLink:focus-visible .remoteHandle {
   color: var(--lane);
+}
+
+.remoteLink:hover .remoteArrow,
+.remoteLink:focus-visible .remoteArrow {
+  color: var(--lane);
+  transform: translate(4px, -4px);
 }
 
 /* ---- 狭い画面 ---- */
@@ -503,7 +608,7 @@ li:first-child .expLine {
   .section > .calendarBlock,
   .section > .langBlock,
   .section > .repoBlock,
-  .section > .remoteBlock,
+  .section > .remotes,
   .hero > .heroRoleBlock,
   .hero > .heroLeadBlock {
     grid-column: 1 / -1;
@@ -546,6 +651,10 @@ li:first-child .expLine {
   }
 
   .repoLang {
+    display: none;
+  }
+
+  .remoteIndex {
     display: none;
   }
 }
