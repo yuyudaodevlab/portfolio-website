@@ -9,6 +9,11 @@ on:
   push:
     branches: ["main"]
 
+  # 活動（GitHub のコントリビューション・リポジトリ・言語）を毎日取り直して再デプロイする
+  # 毎日 0:00 JST（15:00 UTC）。混雑で数十分遅れることがある
+  schedule:
+    - cron: "0 15 * * *"
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -76,6 +81,8 @@ jobs:
         run: npm run build
         env:
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # 認証付きにして REST API のレート制限（未認証は IP あたり 60 回/時）を避ける
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

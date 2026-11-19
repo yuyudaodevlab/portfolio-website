@@ -170,7 +170,11 @@ export async function fetchGithubLive(user = GITHUB_USER, token?: string): Promi
   const apiRepos = await fetchRepos(user, token);
   const [languages, contributions] = await Promise.all([
     fetchLanguages(apiRepos, token).catch(() => []),
-    (token ? fetchContributionsGraphql(user, token) : fetchContributionsHtml(user)).catch(() => null),
+    // トークンの権限で GraphQL が使えない場合（Actions の GITHUB_TOKEN など）は公開 HTML に切り替える
+    (token
+      ? fetchContributionsGraphql(user, token).catch(() => fetchContributionsHtml(user))
+      : fetchContributionsHtml(user)
+    ).catch(() => null),
   ]);
   const repos: Repo[] = apiRepos
     .filter((r) => !r.fork && !r.archived && r.name.toLowerCase() !== user.toLowerCase())
