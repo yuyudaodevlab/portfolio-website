@@ -29,7 +29,7 @@ type SceneId =
   | "beam"
   | "split"
   | "rings"
-  | "wink"
+  | "shapes"
   | "cone"
   | "frame"
   | "donut"
@@ -47,7 +47,7 @@ const SCENES: { id: SceneId; at: number; enter: Enter }[] = [
   { id: "beam", at: 4600, enter: "circle" },
   { id: "split", at: 5200, enter: "diamond" },
   { id: "rings", at: 5850, enter: "wipeUp" },
-  { id: "wink", at: 6500, enter: "circle" },
+  { id: "shapes", at: 6500, enter: "circle" },
   { id: "cone", at: 8000, enter: "wipe" },
   { id: "frame", at: 8500, enter: "diamond" },
   { id: "donut", at: 9000, enter: "circle" },
@@ -65,21 +65,20 @@ const LOADER_MAX_EXTRA = 4000;
 
 // ---- 小物 -------------------------------------------------------------------
 
-/** ウインク顔: 白い円に「×」（水色）と縦長の楕円（青）の目 */
-function FaceShape({ x = 0, y = 0, r = 48 }: { x?: number; y?: number; r?: number }) {
+/** 中心に置く図形: 白い円の中に細いリング（どのシーンでも同じ形を使って、つながりを出す） */
+function OrbShape({ x = 0, y = 0, r = 48 }: { x?: number; y?: number; r?: number }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${r / 48})`}>
       <circle r="48" fill={C.white} />
-      <path d="M-27 -11 L-13 3 M-13 -11 L-27 3" stroke={C.cyan} strokeWidth="6.5" strokeLinecap="round" fill="none" />
-      <ellipse cx="19" cy="-4" rx="5.5" ry="10.5" fill={C.mid} />
+      <circle r="21" fill="none" stroke={C.peri} strokeWidth="8" />
     </g>
   );
 }
 
-function Face({ className, style }: { className?: string; style?: CSSProperties }) {
+function Orb({ className }: { className?: string }) {
   return (
-    <svg className={className} style={style} viewBox="-50 -50 100 100">
-      <FaceShape />
+    <svg className={className} viewBox="-50 -50 100 100">
+      <OrbShape />
     </svg>
   );
 }
@@ -226,9 +225,9 @@ function Scene({ id }: { id: SceneId }) {
         </svg>
       );
 
-    case "wink":
+    case "shapes":
       return (
-        <div className={styles.wink}>
+        <div className={styles.shapes}>
           <i className={styles.yellowBg} />
           <i className={`${styles.frame} ${styles.frameSquare}`} />
           <i className={`${styles.frame} ${styles.frameDiamond}`} />
@@ -251,7 +250,7 @@ function Scene({ id }: { id: SceneId }) {
               }
             />
           ))}
-          <Face className={styles.winkFace} />
+          <Orb className={styles.orb} />
         </div>
       );
 
@@ -278,10 +277,6 @@ function Scene({ id }: { id: SceneId }) {
             <b data-corner="b" />
             <b data-corner="l" />
           </i>
-          <i className={styles.eyes}>
-            <b />
-            <b />
-          </i>
         </div>
       );
 
@@ -293,9 +288,9 @@ function Scene({ id }: { id: SceneId }) {
           <polyline className={styles.chevR} points="84,-30 56,0 84,30" fill="none" stroke={C.navy} strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
           <circle className={styles.donut} r="20" fill="none" stroke="url(#intro-grad)" strokeWidth="12" />
           <g className={styles.orbit}>
-            <FaceShape x={0} y={-38} r={7} />
-            <FaceShape x={33} y={19} r={7} />
-            <FaceShape x={-33} y={19} r={7} />
+            <OrbShape x={0} y={-38} r={7} />
+            <OrbShape x={33} y={19} r={7} />
+            <OrbShape x={-33} y={19} r={7} />
           </g>
         </svg>
       );
@@ -303,7 +298,7 @@ function Scene({ id }: { id: SceneId }) {
     case "zoom":
       return (
         <div className={styles.zoom}>
-          <Face className={styles.zoomFace} />
+          <Orb className={styles.zoomOrb} />
         </div>
       );
 
@@ -316,7 +311,7 @@ function Scene({ id }: { id: SceneId }) {
           <circle className={styles.pop} r="30" fill={C.black} />
           <circle className={styles.spinCw} r="22" fill="none" stroke={C.white} strokeWidth="2.4" strokeDasharray="6 5" />
           <g className={styles.pop} style={{ animationDelay: "90ms" }}>
-            <FaceShape r={14} />
+            <OrbShape r={14} />
           </g>
         </svg>
       );
@@ -329,7 +324,7 @@ function Scene({ id }: { id: SceneId }) {
             <circle className={styles.pop} r="37" fill="none" stroke={C.navy} strokeWidth="5" style={{ animationDelay: "50ms" }} />
             <circle className={styles.pop} r="27" fill="url(#intro-grad)" style={{ animationDelay: "100ms" }} />
             <g className={styles.pop} style={{ animationDelay: "160ms" }}>
-              <FaceShape r={15} />
+              <OrbShape r={15} />
             </g>
           </svg>
         </div>

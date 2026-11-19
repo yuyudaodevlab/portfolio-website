@@ -449,20 +449,20 @@
   }
 }
 
-/* ---- 6.5–8.0s ウインク顔、外枠が次々に変わる ------------------------------ */
+/* ---- 6.5–8.0s 中心の円、外枠が次々に変わる --------------------------------- */
 
-.wink {
+.shapes {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
 }
 
-.wink > * {
+.shapes > * {
   grid-area: 1 / 1;
 }
 
-.winkFace {
+.orb {
   position: relative;
   width: 26vmin;
   animation:
@@ -594,7 +594,7 @@
   }
 }
 
-/* 黒背景に白い角丸ひし形フレーム（角に小さな目のドット） */
+/* 黒背景に白い角丸ひし形フレーム（角に小さなドット） */
 .frameScene {
   position: absolute;
   inset: 0;
@@ -643,28 +643,7 @@
   bottom: 10%;
 }
 
-.eyes {
-  display: flex;
-  gap: 6vmin;
-}
-
-.eyes b {
-  width: 2.4vmin;
-  height: 4.4vmin;
-  border-radius: 999px;
-  background: var(--c-white);
-  animation:
-    pop 300ms var(--back) 160ms both,
-    blink 220ms var(--io) 360ms;
-}
-
-@keyframes blink {
-  50% {
-    transform: scaleY(0.1);
-  }
-}
-
-/* グレー背景に「>」「<」、中央にグラデのドーナツ、周りを小さな顔が回る */
+/* グレー背景に「>」「<」、中央にグラデのドーナツ、周りを小さな円が回る */
 .chevL,
 .chevR {
   transform-box: fill-box;
@@ -708,7 +687,7 @@
   }
 }
 
-/* ウインク顔を画面いっぱいに寄せる */
+/* 中心の円を画面いっぱいに寄せる */
 .zoom {
   position: absolute;
   inset: 0;
@@ -716,7 +695,7 @@
   place-items: center;
 }
 
-.zoomFace {
+.zoomOrb {
   width: 22vmin;
   animation: zoomIn 500ms var(--io) both;
 }
@@ -764,7 +743,7 @@
   }
 }
 
-/* 青系の斜めストライプ＋同心リング、中心にグラデの円と顔 */
+/* 青系の斜めストライプ＋同心リング、中心にグラデの円と白い円 */
 .stripes {
   position: absolute;
   inset: 0;
