@@ -12,6 +12,7 @@ export const en: Dictionary = {
     skipToContent: "Skip to content",
     langLabel: "Language",
     skip: "skip",
+    skipIntro: "Skip intro",
     rebuild: "rebuild",
     logLabel: "Build log",
     building: "Building",

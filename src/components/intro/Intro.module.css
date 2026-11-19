@@ -1,0 +1,901 @@
+/*
+ * オープニング。フラットな幾何学図形を 0.4〜0.8 秒のカットでつなぐ。
+ * 動きはすべて easeInOutCubic / easeOutBack / spring（直線的な動きは使わない）。
+ * 表示するのは <html data-intro="on"> のときだけ（BOOT スクリプトが決める）。
+ */
+
+@property --mx {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 30px;
+}
+
+@property --my {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 10px;
+}
+
+.root {
+  --c-gray: #e4e2e6;
+  --c-peri: #7a98cf;
+  --c-mid: #3e67ae;
+  --c-navy: #0e2f5e;
+  --c-yellow: #f4b820;
+  --c-coral: #f27e5e;
+  --c-pink: #f7c6c6;
+  --c-black: #150b10;
+  --c-light: #d3e0f0;
+  --c-cyan: #7ec3d8;
+  --c-white: #fafafa;
+  --c-grad: linear-gradient(135deg, #f08da0 0%, #9b7fd0 50%, #2e66d6 100%);
+
+  --io: cubic-bezier(0.65, 0, 0.35, 1); /* easeInOutCubic */
+  --back: cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+  --spring: var(--back);
+  --enter: 300ms;
+
+  display: none;
+  position: fixed;
+  inset: 0;
+  /* サイト全体の薄いノイズ（body::after, z-index: 100）はこの上に乗せたままにする */
+  z-index: 95;
+  overflow: hidden;
+  background: var(--c-gray);
+  color: var(--c-peri);
+  font-family: var(--font-rounded), "Hiragino Maru Gothic ProN", var(--font-sans);
+  line-height: 1;
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  .root {
+    --spring: linear(
+      0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%,
+      1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%,
+      0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1
+    );
+  }
+}
+
+:global(html[data-intro="on"]) .root {
+  display: block;
+}
+
+/* 終わり: 円のマスクが中心へ縮んで、下のサイトが見える */
+.root[data-phase="exit"] {
+  animation: exitMask 750ms var(--io) forwards;
+  pointer-events: none;
+}
+
+.root[data-phase="exit"] .stage {
+  animation: exitScale 750ms var(--io) forwards;
+}
+
+@keyframes exitMask {
+  from {
+    clip-path: circle(80% at 50% 50%);
+  }
+  to {
+    clip-path: circle(0% at 50% 50%);
+  }
+}
+
+@keyframes exitScale {
+  to {
+    transform: scale(0.82);
+  }
+}
+
+.stage,
+.scene {
+  position: absolute;
+  inset: 0;
+}
+
+.scene {
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--c-gray);
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.full {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* ---- カットの切り替え（入ってくるシーンにだけ付く） ---------------------- */
+
+.scene[data-enter="circle"] {
+  animation: enterCircle var(--enter) var(--io) both;
+}
+.scene[data-enter="wipe"] {
+  animation: enterWipe var(--enter) var(--io) both;
+}
+.scene[data-enter="wipeUp"] {
+  animation: enterWipeUp var(--enter) var(--io) both;
+}
+.scene[data-enter="diamond"] {
+  animation: enterDiamond var(--enter) var(--io) both;
+}
+
+@keyframes enterCircle {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(80% at 50% 50%);
+  }
+}
+
+@keyframes enterWipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes enterWipeUp {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes enterDiamond {
+  from {
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+  }
+  to {
+    clip-path: polygon(50% -110%, 210% 50%, 50% 210%, -110% 50%);
+  }
+}
+
+/* ---- 共通の動き ------------------------------------------------------------ */
+
+.pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop 420ms var(--back) both;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* ---- 0.0–3.5s ローダー ---------------------------------------------------- */
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.crescentWrap {
+  animation: squash 560ms var(--io) infinite alternate;
+}
+
+/* 円から、ずらした円をくり抜いた三日月。くり抜く位置を動かして太さを変える */
+.crescent {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  -webkit-mask: radial-gradient(circle 15px at var(--mx) var(--my), transparent 98%, #000 100%);
+  mask: radial-gradient(circle 15px at var(--mx) var(--my), transparent 98%, #000 100%);
+  animation:
+    spin 1100ms var(--io) infinite,
+    morph 1500ms var(--io) infinite alternate;
+}
+
+.crescent i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--c-white);
+}
+
+/* 白 → ピンク〜青のグラデへ */
+.crescent i:last-child {
+  background: var(--c-grad);
+  opacity: 0;
+  animation: fadeIn 2000ms var(--io) 900ms forwards;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes morph {
+  from {
+    --mx: 35px;
+    --my: 6px;
+  }
+  to {
+    --mx: 25px;
+    --my: 14px;
+  }
+}
+
+@keyframes squash {
+  from {
+    transform: scale(1.12, 0.88);
+  }
+  to {
+    transform: scale(0.9, 1.12);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.loading {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--c-peri);
+}
+
+.loading span {
+  animation: dot 1200ms var(--io) infinite;
+}
+.loading span:nth-child(2) {
+  animation-delay: 200ms;
+}
+.loading span:nth-child(3) {
+  animation-delay: 400ms;
+}
+
+@keyframes dot {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* ---- 3.5–4.0s ブロブが一気に広がる ---------------------------------------- */
+
+.blob {
+  position: absolute;
+  aspect-ratio: 1;
+  animation: blobIn 480ms var(--back) both;
+}
+
+@keyframes blobIn {
+  from {
+    transform: translate(var(--fx), var(--fy)) scale(0.2) rotate(-40deg);
+  }
+  to {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+}
+
+.bean {
+  position: absolute;
+  width: 18vmin;
+  animation: beanIn 460ms var(--back) both;
+}
+
+.beanA {
+  left: 22%;
+  top: 6%;
+  --r: -24deg;
+  --f: -30vh;
+}
+
+.beanB {
+  right: 18%;
+  bottom: 8%;
+  --r: 150deg;
+  --f: 30vh;
+  animation-delay: 60ms;
+}
+
+@keyframes beanIn {
+  from {
+    transform: translateY(var(--f)) rotate(calc(var(--r) - 90deg)) scale(0.3);
+  }
+  to {
+    transform: translateY(0) rotate(var(--r)) scale(1);
+  }
+}
+
+.smallName {
+  position: relative;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--c-navy);
+  animation: pop 380ms var(--back) 120ms both;
+}
+
+/* ---- 4.0–6.5s 高速カット -------------------------------------------------- */
+
+/* (1) ほぼ黒＋細いグリッド、黄色のブロブが上下から伸び縮み */
+.grid {
+  position: absolute;
+  inset: 0;
+  background-color: var(--c-black);
+  background-image:
+    linear-gradient(rgb(250 250 250 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(250 250 250 / 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: center;
+}
+
+.pill {
+  position: absolute;
+  width: 15vmin;
+  height: 62vh;
+  margin-left: -7.5vmin;
+  border-radius: 999px;
+  background: var(--c-yellow);
+  animation: stretch 600ms var(--io) both;
+}
+
+.pill[data-size="s"] {
+  width: 9vmin;
+  margin-left: -4.5vmin;
+  height: 44vh;
+}
+
+.pill[data-from="top"] {
+  top: -12vh;
+  transform-origin: 50% 0;
+}
+
+.pill[data-from="bottom"] {
+  bottom: -12vh;
+  transform-origin: 50% 100%;
+}
+
+@keyframes stretch {
+  0% {
+    transform: scaleY(0);
+  }
+  38% {
+    transform: scaleY(1.08) scaleX(0.92);
+  }
+  64% {
+    transform: scaleY(0.62) scaleX(1.1);
+  }
+  100% {
+    transform: scaleY(0.9) scaleX(1);
+  }
+}
+
+/* (2) グレーの大きな円、左右に青い円、背後に白い光の帯 */
+.beams {
+  transform-box: view-box;
+  transform-origin: 0 0; /* viewBox の原点（＝画面の中心） */
+  animation: beams 600ms var(--io) both;
+}
+
+@keyframes beams {
+  from {
+    transform: rotate(-30deg) scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(12deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.sideL,
+.sideR {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: slideIn 440ms var(--back) 60ms both;
+}
+
+.sideL {
+  --from: -90px;
+}
+.sideR {
+  --from: 90px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(var(--from)) scale(0.4);
+  }
+  to {
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* (3) 黄色のリング＋斜めに二分された円が回る */
+.splitSpin {
+  transform-box: view-box;
+  transform-origin: 0 0; /* viewBox の原点（＝画面の中心） */
+  animation: splitSpin 650ms var(--io) both;
+}
+
+@keyframes splitSpin {
+  from {
+    transform: rotate(-135deg) scale(0.2);
+  }
+  to {
+    transform: rotate(225deg) scale(1);
+  }
+}
+
+/* ---- 6.5–8.0s ウインク顔、外枠が次々に変わる ------------------------------ */
+
+.wink {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.wink > * {
+  grid-area: 1 / 1;
+}
+
+.winkFace {
+  position: relative;
+  width: 26vmin;
+  animation:
+    pop 420ms var(--back) both,
+    bump 300ms var(--io) 500ms,
+    bump 300ms var(--io) 1000ms;
+}
+
+@keyframes bump {
+  50% {
+    transform: scale(1.14) rotate(-6deg);
+  }
+}
+
+.frame {
+  width: 46vmin;
+  aspect-ratio: 1;
+  --rot: 0deg;
+}
+
+/* 水色の角丸四角 → ピンクのひし形 → 黄色背景＋黒の太いひし形リング */
+.frameSquare {
+  border-radius: 24%;
+  background: var(--c-cyan);
+  animation:
+    framePop 400ms var(--spring) both,
+    frameOut 180ms var(--io) 500ms forwards;
+}
+
+.frameDiamond {
+  --rot: 45deg;
+  border-radius: 20%;
+  background: var(--c-pink);
+  animation:
+    framePop 400ms var(--spring) 500ms both,
+    frameOut 180ms var(--io) 1000ms forwards;
+}
+
+.frameRing {
+  --rot: 45deg;
+  width: 44vmin;
+  border-radius: 18%;
+  border: 4.4vmin solid var(--c-black);
+  animation: framePop 420ms var(--spring) 1000ms both;
+}
+
+.yellowBg {
+  position: absolute;
+  inset: 0;
+  background: var(--c-yellow);
+  animation: enterCircle 320ms var(--io) 1000ms both;
+}
+
+@keyframes framePop {
+  from {
+    transform: rotate(calc(var(--rot) - 90deg)) scale(0);
+  }
+  to {
+    transform: rotate(var(--rot)) scale(1);
+  }
+}
+
+@keyframes frameOut {
+  to {
+    transform: rotate(calc(var(--rot) + 45deg)) scale(0);
+  }
+}
+
+.particle {
+  position: absolute;
+  aspect-ratio: 1;
+  margin: -1vmin 0 0 -1vmin;
+  border-radius: 50%;
+  background: var(--c);
+  animation:
+    pop 360ms var(--back) both,
+    drift 1500ms var(--io) both;
+}
+
+.particle[data-ring] {
+  background: none;
+  border: 0.5vmin solid var(--c);
+}
+
+@keyframes drift {
+  to {
+    translate: var(--dx) var(--dy);
+  }
+}
+
+/* ---- 8.0–10.0s ------------------------------------------------------------ */
+
+/* 青グラデ＋黒い円錐（左から伸びる）＋細線のひし形 */
+.cone {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #2e66d6 0%, var(--c-mid) 45%, var(--c-peri) 100%);
+}
+
+.coneGrow {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: coneGrow 460ms var(--back) both;
+}
+
+@keyframes coneGrow {
+  from {
+    transform: scaleX(0) scaleY(0.4);
+  }
+  to {
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+.lineDiamond {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lineDiamond 500ms var(--io) both;
+}
+
+@keyframes lineDiamond {
+  from {
+    transform: rotate(0deg) scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(135deg) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 黒背景に白い角丸ひし形フレーム（角に小さな目のドット） */
+.frameScene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--c-black);
+}
+
+.frameScene > * {
+  grid-area: 1 / 1;
+}
+
+.whiteDiamond {
+  position: relative;
+  width: 40vmin;
+  aspect-ratio: 1;
+  border: 2.6vmin solid var(--c-white);
+  border-radius: 22%;
+  --rot: 45deg;
+  animation: framePop 440ms var(--spring) both;
+}
+
+.whiteDiamond b {
+  position: absolute;
+  width: 2.2vmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c-white);
+  animation: pop 300ms var(--back) 220ms both;
+}
+
+.whiteDiamond b[data-corner="t"] {
+  left: 10%;
+  top: 10%;
+}
+.whiteDiamond b[data-corner="r"] {
+  right: 10%;
+  top: 10%;
+}
+.whiteDiamond b[data-corner="b"] {
+  right: 10%;
+  bottom: 10%;
+}
+.whiteDiamond b[data-corner="l"] {
+  left: 10%;
+  bottom: 10%;
+}
+
+.eyes {
+  display: flex;
+  gap: 6vmin;
+}
+
+.eyes b {
+  width: 2.4vmin;
+  height: 4.4vmin;
+  border-radius: 999px;
+  background: var(--c-white);
+  animation:
+    pop 300ms var(--back) 160ms both,
+    blink 220ms var(--io) 360ms;
+}
+
+@keyframes blink {
+  50% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* グレー背景に「>」「<」、中央にグラデのドーナツ、周りを小さな顔が回る */
+.chevL,
+.chevR {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: slideIn 440ms var(--back) both;
+}
+.chevL {
+  --from: -60px;
+}
+.chevR {
+  --from: 60px;
+}
+
+.donut {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: donut 500ms var(--back) both;
+}
+
+@keyframes donut {
+  from {
+    transform: scale(0) rotate(-180deg);
+  }
+  to {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.orbit {
+  transform-box: view-box;
+  transform-origin: 0 0; /* viewBox の原点（＝画面の中心） */
+  animation: orbit 500ms var(--io) both;
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(-90deg) scale(0.4);
+  }
+  to {
+    transform: rotate(120deg) scale(1);
+  }
+}
+
+/* ウインク顔を画面いっぱいに寄せる */
+.zoom {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.zoomFace {
+  width: 22vmin;
+  animation: zoomIn 500ms var(--io) both;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(9) rotate(-8deg);
+  }
+}
+
+/* ---- 10.0–11.5s 同心リング --------------------------------------------- */
+
+.spinCw,
+.spinCcw {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.spinCw {
+  animation: spinIn 750ms var(--io) both;
+}
+
+.spinCcw {
+  animation: spinInRev 750ms var(--io) 40ms both;
+}
+
+@keyframes spinIn {
+  from {
+    transform: rotate(-120deg) scale(0.5);
+  }
+  to {
+    transform: rotate(150deg) scale(1);
+  }
+}
+
+@keyframes spinInRev {
+  from {
+    transform: rotate(120deg) scale(0.5);
+  }
+  to {
+    transform: rotate(-150deg) scale(1);
+  }
+}
+
+/* 青系の斜めストライプ＋同心リング、中心にグラデの円と顔 */
+.stripes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* 画面より大きい板を横に流す（継ぎ目を出さないため、背景位置ではなく transform で動かす） */
+.stripes::before {
+  content: "";
+  position: absolute;
+  inset: -160px;
+  background: repeating-linear-gradient(-45deg, var(--c-mid) 0 26px, var(--c-peri) 26px 52px);
+  animation: stripes 750ms var(--io) both;
+}
+
+@keyframes stripes {
+  from {
+    transform: translateX(-147.08px); /* 縞 2 本分（52px × √2 × 2） */
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ---- 11.5–12.5s 粒が弾んで、青で満たして、グレーに戻る ------------------- */
+
+.bounce {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.dots {
+  display: flex;
+  gap: 14px;
+}
+
+.dots i {
+  width: 14px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--c-peri);
+  transform-origin: 50% 100%;
+  animation: hop 440ms var(--io) both;
+}
+
+@keyframes hop {
+  0% {
+    transform: translateY(0) scale(1.3, 0.7);
+  }
+  30% {
+    transform: translateY(-46px) scale(0.85, 1.15);
+  }
+  55% {
+    transform: translateY(0) scale(1.25, 0.75);
+  }
+  75% {
+    transform: translateY(-18px) scale(0.95, 1.05);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.fillBlue,
+.fillGray {
+  position: absolute;
+  inset: 0;
+}
+
+.fillBlue {
+  background: var(--c-mid);
+  animation: enterCircle 260ms var(--io) 460ms both;
+}
+
+.fillGray {
+  background: var(--c-gray);
+  animation: enterCircle 260ms var(--io) 740ms both;
+}
+
+/* ---- 12.5–14.7s 名前 ------------------------------------------------------ */
+
+.nameScene {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 16px;
+}
+
+.name {
+  font-size: clamp(32px, 10vw, 48px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--c-peri);
+  animation: fadeUp 700ms var(--back) 80ms both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- skip ------------------------------------------------------------------ */
+
+.skip {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 1;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(14 47 94 / 0.82);
+  color: var(--c-white);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.2s var(--io);
+}
+
+.skip:hover,
+.skip:focus-visible {
+  opacity: 1;
+}

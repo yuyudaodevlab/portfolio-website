@@ -164,3 +164,8 @@ a {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* オープニング中はスクロールさせない（src/components/intro） */
+html[data-intro="on"] {
+  overflow: hidden;
+}

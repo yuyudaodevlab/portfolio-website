@@ -12,6 +12,7 @@ export const ja: Dictionary = {
     skipToContent: "本文へ移動",
     langLabel: "言語",
     skip: "skip",
+    skipIntro: "オープニングを飛ばす",
     rebuild: "rebuild",
     logLabel: "ビルドログ",
     building: "組み立て中",

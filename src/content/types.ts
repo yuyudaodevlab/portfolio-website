@@ -42,6 +42,7 @@ export type Dictionary = {
     skipToContent: string;
     langLabel: string;
     skip: string;
+    skipIntro: string;
     rebuild: string;
     logLabel: string;
     building: string;

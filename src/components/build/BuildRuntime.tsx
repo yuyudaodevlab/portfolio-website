@@ -7,6 +7,7 @@ import { buildBus } from "./bus";
 import { Controls } from "./Controls";
 import { CursorLayer } from "./CursorLayer";
 import styles from "./Dock.module.css";
+import { whenIntroDone } from "../intro/state";
 import { createEngine, type Engine, type EngineStatus, type LogLine } from "./engine";
 
 const MAX_LINES = 40;
@@ -44,14 +45,18 @@ export function BuildRuntime({ ui }: { ui: Dictionary["ui"] }) {
       if (e.type === "reset") setProgress({ done: 0, total });
     });
 
-    const engine = createEngine({
-      page,
-      layer,
-      play: new URLSearchParams(window.location.search).has("play"),
-      onLog: (line) => setLines((prev) => [...prev.slice(-(MAX_LINES - 1)), line]),
-      onStatus: setStatus,
+    // オープニングが流れている間は動かさない（終わってから組み立てを始める）
+    let engine: Engine | null = null;
+    const cancelWait = whenIntroDone(() => {
+      engine = createEngine({
+        page,
+        layer,
+        play: new URLSearchParams(window.location.search).has("play"),
+        onLog: (line) => setLines((prev) => [...prev.slice(-(MAX_LINES - 1)), line]),
+        onStatus: setStatus,
+      });
+      engineRef.current = engine;
     });
-    engineRef.current = engine;
 
     // 経歴の行にホバーしたら、3D グラフの同じ色のレーンを光らせる
     const hover = new AbortController();
@@ -71,7 +76,8 @@ export function BuildRuntime({ ui }: { ui: Dictionary["ui"] }) {
     return () => {
       hover.abort();
       unsubscribe();
-      engine.destroy();
+      cancelWait();
+      engine?.destroy();
       engineRef.current = null;
     };
   }, []);

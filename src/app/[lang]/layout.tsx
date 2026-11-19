@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Nunito } from "next/font/google";
 import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { Intro } from "@/components/intro/Intro";
 import { getDictionary, isLang, LANGS } from "@/content";
 import { siteUrl } from "@/lib/site";
 import "../globals.css";
@@ -27,6 +28,14 @@ const plexJp = localFont({
   display: "swap",
   preload: false,
   fallback: ["Hiragino Sans", "Yu Gothic", "Meiryo", "sans-serif"],
+});
+
+// オープニングの名前と「Now Loading...」用の丸ゴシック（英字だけ）
+const nunito = Nunito({
+  weight: ["700", "800"],
+  subsets: ["latin"],
+  variable: "--font-rounded",
+  display: "swap",
 });
 
 const plexMono = IBM_Plex_Mono({
@@ -74,9 +83,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 /**
  * 描画前に走る小さなスクリプト。
  * - 言語切り替え直後（sessionStorage のフラグ）は、ブロックを隠さず完成状態で描く
- * - エンジンの JS が 8 秒たっても起動しなければ、隠したブロックを全部見せる
+ * - オープニングは、このタブで初めて開いたときだけ流す（reduced-motion・言語切り替え直後・?nointro では流さない）
+ * - オープニングの JS が動かなくても 25 秒で必ず外す
+ * - エンジンの JS が 8 秒（オープニングがあるときはその後）たっても起動しなければ、隠したブロックを全部見せる
  */
-const BOOT = `(function(){var d=document.documentElement;try{if(sessionStorage.getItem("build:skip")==="1")d.dataset.build="off"}catch(e){}window.__buildTimer=setTimeout(function(){if(!window.__buildReady){window.__buildTimedOut=true;d.dataset.build="off"}},8000)})();`;
+const BOOT = `(function(){var d=document.documentElement,w=window,s=false,i=false;try{s=sessionStorage.getItem("build:skip")==="1";if(s)d.dataset.build="off";i=!s&&sessionStorage.getItem("intro:seen")!=="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&!/[?&]nointro(=|&|$)/.test(location.search)}catch(e){}if(i){d.dataset.intro="on";setTimeout(function(){if(!w.__introDone){w.__introDone=true;delete d.dataset.intro;w.dispatchEvent(new Event("intro:done"))}},25000)}w.__buildTimer=setTimeout(function(){if(!w.__buildReady){w.__buildTimedOut=true;d.dataset.build="off"}},i?33000:8000)})();`;
 
 export default async function LangLayout({
   children,
@@ -87,12 +98,20 @@ export default async function LangLayout({
 }) {
   const { lang } = await params;
   if (!isLang(lang)) notFound();
+  const { ui } = getDictionary(lang);
   return (
-    <html lang={lang} className={`${archivo.variable} ${plexJp.variable} ${plexMono.variable}`} suppressHydrationWarning>
+    <html
+      lang={lang}
+      className={`${archivo.variable} ${plexJp.variable} ${plexMono.variable} ${nunito.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <Intro skipLabel={ui.skip} skipAria={ui.skipIntro} />
+        {children}
+      </body>
     </html>
   );
 }
