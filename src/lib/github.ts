@@ -10,7 +10,8 @@ export type { GithubData, Repo, ContributionDay, LanguageShare } from "./github-
  */
 export async function getGithubData(): Promise<GithubData> {
   try {
-    const live = await fetchGithubLive(GITHUB_USER, process.env.GITHUB_TOKEN || undefined);
+    const token = process.env.GITHUB_TOKEN || undefined;
+    const live = await fetchGithubLive(GITHUB_USER, token, process.env.CONTRIBUTIONS_TOKEN || token);
     if (live.repos.length === 0 && !live.contributions) throw new Error("empty");
     return {
       ...live,

@@ -1,4 +1,4 @@
-// GitHub の公開データを取得して、サイトで使う形に整える。
+// GitHub のデータを取得して、サイトで使う形に整える。
 // Next.js にも Node スクリプト (scripts/snapshot-github.mts) にも読まれるので、
 // パスエイリアスや next/* の import は使わない。
 
@@ -166,13 +166,23 @@ async function fetchContributionsHtml(user: string) {
   return { total, weeks };
 }
 
-export async function fetchGithubLive(user = GITHUB_USER, token?: string): Promise<GithubData> {
+/**
+ * @param token REST API 用（レート制限よけ）。Actions の GITHUB_TOKEN で足りる
+ * @param contributionsToken コントリビューション用。本人の PAT（classic・repo スコープ）を渡すと
+ *   プライベートリポジトリの分も日別の件数に含まれる（リポジトリ名などは取得しない）
+ */
+export async function fetchGithubLive(
+  user = GITHUB_USER,
+  token?: string,
+  contributionsToken = token,
+): Promise<GithubData> {
   const apiRepos = await fetchRepos(user, token);
   const [languages, contributions] = await Promise.all([
     fetchLanguages(apiRepos, token).catch(() => []),
-    // トークンの権限で GraphQL が使えない場合（Actions の GITHUB_TOKEN など）は公開 HTML に切り替える
-    (token
-      ? fetchContributionsGraphql(user, token).catch(() => fetchContributionsHtml(user))
+    // トークンの権限で GraphQL が使えない場合（Actions の GITHUB_TOKEN など）は公開 HTML に切り替える。
+    // 公開 HTML にはプライベートの分は入らない（GitHub のプロフィール設定で公開していない限り）
+    (contributionsToken
+      ? fetchContributionsGraphql(user, contributionsToken).catch(() => fetchContributionsHtml(user))
       : fetchContributionsHtml(user)
     ).catch(() => null),
   ]);

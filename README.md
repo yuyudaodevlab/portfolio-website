@@ -19,6 +19,7 @@ npm run lint       # tsc --noEmit
 | 環境変数 | 用途 |
 | --- | --- |
 | `GITHUB_TOKEN` | 任意。あれば GraphQL でコントリビューションを取得。無ければ公開データ（REST と公開カレンダー）で動く |
+| `CONTRIBUTIONS_TOKEN` | 任意。本人の PAT（classic・`repo` スコープ）。あればプライベートリポジトリのコミットも活動の件数に含める（件数だけでリポジトリ名は出ない）。Actions ではリポジトリの Secret に同名で登録する |
 | `NEXT_PUBLIC_SITE_URL` | 任意。OGP・sitemap の絶対 URL。Vercel では本番 URL が自動で入る |
 
 ## 構成

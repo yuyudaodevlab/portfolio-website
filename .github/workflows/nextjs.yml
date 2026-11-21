@@ -83,6 +83,9 @@ jobs:
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           # 認証付きにして REST API のレート制限（未認証は IP あたり 60 回/時）を避ける
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 活動のコミット数にプライベートリポジトリの分も含めるための本人の PAT（classic・repo スコープ）。
+          # 未設定なら公開分だけになる
+          CONTRIBUTIONS_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
           NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

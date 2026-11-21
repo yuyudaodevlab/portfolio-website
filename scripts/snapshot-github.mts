@@ -8,7 +8,9 @@ import { fetchGithubLive } from "../src/lib/github-core.ts";
 const out = fileURLToPath(new URL("../src/data/github-snapshot.json", import.meta.url));
 
 try {
-  const data = await fetchGithubLive(undefined, process.env.GITHUB_TOKEN || undefined);
+  // CONTRIBUTIONS_TOKEN（本人の PAT）があればプライベートリポジトリのコミットも件数に含める
+  const token = process.env.GITHUB_TOKEN || undefined;
+  const data = await fetchGithubLive(undefined, token, process.env.CONTRIBUTIONS_TOKEN || token);
   if (data.repos.length === 0 && !data.contributions) throw new Error("empty response");
   await writeFile(out, JSON.stringify({ ...data, source: "snapshot" }, null, 2) + "\n");
   console.log(`github snapshot: ${data.repos.length} repos, ${data.contributions?.total ?? "-"} contributions`);
